@@ -30,10 +30,12 @@
 	<!-- 项目的详细描述, Maven 产生的文档用。 当这个元素能够用HTML格式描述时（例如，CDATA中的文本会被解析器忽略，就可以包含HTML标
         签）。 -->
 	<description>Demo project for Spring Boot</description>
+   <packaging>jar</packaging>
 
 	<properties>
 		<!-- 项目开发的java版本号。 -->
 		<java.version>1.8</java.version>
+   		<docker.image.prefix>spring-boot-yiibai</docker.image.prefix>
 	</properties>
 	<!-- 项目的依赖项，可以通过，该元素描述了项目相关的所有依赖，它们自动从项目定义的仓库中下载。 -->
 	<dependencies>
@@ -56,9 +58,8 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<!-- 构建项目（打包生成可执行文件）需要的信息 -->
-	<build>
-		<!-- 项目使用的插件列表 。 -->
+	<!-- 构建项目（打包生成可执行文件）需要的信息 
+	<build> 
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -84,6 +85,34 @@
                 </configuration>
             </plugin>
 		</plugins>
-	</build>
+	</build>-->
 
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>1.2.2</version>
+
+				<configuration>
+				<!-- <imageName>${docker.image.prefix}/${project.artifactId}</imageName> -->
+                <googleContainerRegistryEnabled>false</googleContainerRegistryEnabled>
+                    <imageName>rong/demo</imageName>
+				<dockerDirectory>src/main/docker</dockerDirectory>
+				<resources>
+					<resource>
+						<directory>${project.build.directory}</directory>
+						<include>${project.build.finalName}.jar</include>
+					</resource>
+				</resources>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>
